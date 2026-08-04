@@ -180,12 +180,12 @@ custom_html = f"""
         .play-btn {{
             background-color: #A3B1C6;
             color: #333;
-            font-size: 1.5rem;
+            font-size: 1.3rem;
             font-weight: bold;
             border: none;
             border-radius: 8px;
-            padding: 12px;
-            width: 100%;
+            padding: 10px;
+            width: 90%;
             margin-bottom: 20px;
             cursor: pointer;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
