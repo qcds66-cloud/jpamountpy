@@ -22,7 +22,7 @@ STYLE_CONFIG = {
     
     # 列表文字設定
     "list_font_size": "20px",       # 🌟 單字列表的字體大小
-    "list_line_height": "1.2",      # 🌟 單字列表的行距
+    "list_line_height": "1.0",      # 🌟 單字列表的行距
     
     # 特殊文字顏色
     "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
@@ -42,8 +42,8 @@ st.markdown(f"""
     /* 🔥 針對 st.title() 產生的標題(h1)，將字體縮小50% (原約 2.5rem 改為 1.25rem) */
     h1 {{
         font-size: 1.25rem !important;
-        padding-top: 0 !important;
-        margin-bottom: 0 !important;
+        padding-top: 1 !important;
+        margin-bottom: 1 !important;
     }}
 
     /* 整體背景與字體顏色 */
@@ -60,23 +60,23 @@ st.markdown(f"""
     
     /* 🔥 將下拉選單本身的選取框與文字放大約 80% (預設為 1rem，改為 1.8rem) */
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {{
-        font-size: 1.8rem !important;
+        font-size: 2.8rem !important;
     }}
     div[data-testid="stSelectbox"] div[data-baseweb="select"] span {{
-        font-size: 1.8rem !important;
+        font-size: 2.8rem !important;
     }}
     div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {{
-        width: 1.8rem !important;
-        height: 1.8rem !important;
+        width: 2.8rem !important;
+        height: 2.8rem !important;
     }}
     /* 🔥 同步放大展開後的選單清單文字 (加大80%) */
     ul[role="listbox"] li {{
-        font-size: 1.8rem !important;
+        font-size: 2.8rem !important;
     }}
     
     /* 🔥 縮小 Streamlit 預設的區塊間距 */
     div[data-testid="stVerticalBlock"] {{
-        gap: 0rem !important; 
+        gap: 0.5rem !important; 
     }}
     /* 🔥 將下拉選單底部的空間進一步壓縮 */
     div[data-testid="stSelectbox"] {{
