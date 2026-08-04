@@ -1,6 +1,9 @@
 import streamlit as st
+import streamlit.components.v1 as components
 from gtts import gTTS
 import io
+import base64
+import json
 
 # --- 頁面設定 (針對手機優化) ---
 st.set_page_config(
@@ -18,46 +21,28 @@ STYLE_CONFIG = {
     "text_color": "#4A4A4A",        # 主要文字顏色 (深灰)
     
     # 列表文字設定
-    "list_font_size": "22px",       # 🌟 單字列表的字體大小 (建議 18px ~ 24px)
-    "list_line_height": "2.2",      # 🌟 單字列表的行距 (建議 1.5 ~ 2.5)
+    "list_font_size": "22px",       # 🌟 單字列表的字體大小
+    "list_line_height": "1.4",      # 🌟 單字列表的行距 (原為2.0，依需求縮小30%改為1.4)
     
     # 特殊文字顏色
     "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
-    "warn_color": "#C07B7B"         # 警告文字 (*注意) 的顏色
+    "warn_color": "#C07B7B",        # 警告文字 (*注意) 的顏色
+    "highlight_color": "#0066CC",   # 🌟 朗讀時的高亮顏色 (藍色)
+    "highlight_bg": "#E8F0FE"       # 朗讀時的背景底色 (淺藍，增加辨識度)
 }
 
-# 注入 CSS 樣式
+# 注入 Streamlit 原生介面 CSS 樣式
 st.markdown(f"""
     <style>
     /* 整體背景與字體顏色 */
     .stApp {{
         background-color: {STYLE_CONFIG["bg_color"]};
     }}
-    
     /* 下拉選單標題設定 */
     div[data-testid="stSelectbox"] label {{
         color: {STYLE_CONFIG["text_color"]};
         font-weight: bold;
-        font-size: 1.2rem;
-    }}
-    
-    /* 自訂列表項目的 CSS 類別 */
-    .list-item {{
-        font-size: {STYLE_CONFIG["list_font_size"]};
-        line-height: {STYLE_CONFIG["list_line_height"]};
-        color: {STYLE_CONFIG["text_color"]};
-        font-weight: bold;
-        padding: 5px 10px;
-        border-bottom: 1px dashed #C9C9C9; /* 加上淡淡的分隔線增加易讀性 */
-    }}
-    
-    /* 提示與注意的文字樣式 */
-    .item-note {{
-        color: {STYLE_CONFIG["note_color"]};
-        font-size: 0.9em; /* 比主字體稍微小一點 */
-    }}
-    .item-warn {{
-        color: {STYLE_CONFIG["warn_color"]};
+        font-size: 1.4rem;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -91,50 +76,186 @@ def get_readable_text(text):
     return text
 
 @st.cache_data
-def get_audio_bytes(text):
-    """生成 TTS 音訊並轉為位元組"""
+def get_audio_base64(text):
+    """生成 TTS 音訊並轉為 Base64 字串傳遞給前端"""
     tts = gTTS(text=text, lang='ja')
     fp = io.BytesIO()
     tts.write_to_fp(fp)
     fp.seek(0)
-    return fp.read()
+    b64 = base64.b64encode(fp.read()).decode()
+    return f"data:audio/mp3;base64,{b64}"
 
 # --- UI 介面設計 ---
 st.title("🇯🇵 日語量詞學習")
 
 # 選擇類別
-selected_category = st.selectbox("請選擇學習類別：", list(DATA.keys()))
+selected_category = st.selectbox("請選擇類別：", list(DATA.keys()))
 st.divider()
 
-# 音訊播放區塊 (固定在頂部)
-audio_placeholder = st.empty()
+# 動態產生該類別的 HTML 與 JavaScript 資料
+js_items = []
+html_list = []
 
-# 控制按鈕區 (連續朗讀)
-play_all = st.button("▶️ 播放此類別連續朗讀", use_container_width=True)
-
-if play_all:
-    # 組合該類別的所有單字，使用句號分隔以產生自然的停頓
-    items_to_read = [get_readable_text(item) for item in DATA[selected_category] if not item.startswith("※")]
-    combined_text = "。 ".join(items_to_read)
-    
-    with st.spinner("產生連續語音中... (產生後將自動播放)"):
-        audio_bytes = get_audio_bytes(combined_text)
-        audio_placeholder.audio(audio_bytes, format='audio/mp3', autoplay=True)
-
-# 類別標題
-st.subheader(selected_category)
-
-# 列表展示區 (使用 HTML 渲染以套用集中的樣式設定)
-for item in DATA[selected_category]:
-    if item.startswith("※"):
-        # 提示文字
-        display_html = f"<div class='list-item item-note'>{item}</div>"
-    elif "*注意" in item:
-        # 注意文字 (將 *注意 標上特殊顏色)
-        clean_text = item.replace("*注意", "")
-        display_html = f"<div class='list-item'>{clean_text} <span class='item-warn'>(*注意)</span></div>"
-    else:
-        # 一般文字
-        display_html = f"<div class='list-item'>{item}</div>"
+# 建立資料清單時顯示 Loading 狀態
+with st.spinner("載入語音中... (產生後立即可播放)"):
+    for i, item in enumerate(DATA[selected_category]):
+        item_id = f"item-{i}"
         
-    st.markdown(display_html, unsafe_allow_html=True)
+        if item.startswith("※"):
+            # 提示文字 (無語音)
+            html_list.append(f"<div id='{item_id}' class='list-item item-note'>{item}</div>")
+            js_items.append({"id": item_id, "hasAudio": False})
+        else:
+            # 處理警告文字
+            clean_text = item.replace("*注意", "")
+            warn_html = "<span class='item-warn'>(*注意)</span>" if "*注意" in item else ""
+            html_list.append(f"<div id='{item_id}' class='list-item'>{clean_text} {warn_html}</div>")
+            
+            # 生成語音 Base64
+            audio_b64 = get_audio_base64(get_readable_text(item))
+            js_items.append({"id": item_id, "hasAudio": True, "audio": audio_b64})
+
+# 組合 HTML 原始碼 (結合 CSS 與 JS 控制器)
+# 這裡將清單及播放邏輯封裝至前端，以達成精準的畫面顏色同步及 2 秒延遲。
+custom_html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {{
+            background-color: {STYLE_CONFIG['bg_color']};
+            margin: 0; padding: 0;
+            font-family: sans-serif;
+        }}
+        /* 播放按鈕設計 */
+        .play-btn {{
+            background-color: #A3B1C6;
+            color: #333;
+            font-size: 1.2rem;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            width: 100%;
+            margin-bottom: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }}
+        /* 單字列表設計 */
+        .list-item {{
+            font-size: {STYLE_CONFIG['list_font_size']};
+            line-height: {STYLE_CONFIG['list_line_height']};
+            color: {STYLE_CONFIG['text_color']};
+            font-weight: bold;
+            padding: 8px 10px;
+            border-bottom: 1px dashed #C9C9C9;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }}
+        .item-note {{
+            color: {STYLE_CONFIG['note_color']};
+            font-size: 0.9em;
+            font-weight: normal;
+        }}
+        .item-warn {{ color: {STYLE_CONFIG['warn_color']}; }}
+        
+        /* 🔥 正在朗讀時的高亮 CSS 類別 */
+        .highlight {{
+            color: {STYLE_CONFIG['highlight_color']} !important;
+            background-color: {STYLE_CONFIG['highlight_bg']};
+            transform: scale(1.02); /* 微微放大增加視覺焦點 */
+        }}
+    </style>
+</head>
+<body>
+    <button id="playBtn" class="play-btn" onclick="togglePlay()">▶️ 朗讀 {selected_category}</button>
+    <div id="list-container">
+        {"".join(html_list)}
+    </div>
+    
+    <audio id="audio-player"></audio>
+
+    <script>
+        const items = {json.dumps(js_items)};
+        let currentIndex = 0;
+        let isPlaying = false;
+        let timeoutId = null;
+        
+        const player = document.getElementById('audio-player');
+        const btn = document.getElementById('playBtn');
+
+        function togglePlay() {{
+            if (isPlaying) {{
+                // 停止邏輯
+                isPlaying = false;
+                player.pause();
+                clearTimeout(timeoutId);
+                btn.innerHTML = "▶️ 朗讀 {selected_category}";
+                btn.style.backgroundColor = "#A3B1C6";
+                clearHighlight();
+            }} else {{
+                // 開始邏輯
+                isPlaying = true;
+                currentIndex = 0;
+                btn.innerHTML = "⏹ 停止朗讀";
+                btn.style.backgroundColor = "#D5C6C6";
+                playNext();
+            }}
+        }}
+
+        function clearHighlight() {{
+            document.querySelectorAll('.list-item').forEach(el => el.classList.remove('highlight'));
+        }}
+
+        function playNext() {{
+            if (!isPlaying) return;
+            clearHighlight();
+
+            // 若播放完畢
+            if (currentIndex >= items.length) {{
+                isPlaying = false;
+                btn.innerHTML = "▶️ 朗讀 {selected_category}";
+                btn.style.backgroundColor = "#A3B1C6";
+                return;
+            }}
+
+            const item = items[currentIndex];
+            const el = document.getElementById(item.id);
+
+            if (item.hasAudio) {{
+                // 1. 變更顏色
+                if (el) {{
+                    el.classList.add('highlight');
+                    // 自動將畫面滾動到正在播放的單字
+                    el.scrollIntoView({{ behavior: 'smooth', block: 'center' }});
+                }}
+                
+                // 2. 播放語音
+                player.src = item.audio;
+                player.play();
+
+                // 3. 語音結束後，等待 2 秒再進下一首
+                player.onended = () => {{
+                    if (!isPlaying) return;
+                    if (el) el.classList.remove('highlight'); /* 變回原色 */
+                    currentIndex++;
+                    
+                    // 暫停 2 秒
+                    timeoutId = setTimeout(() => {{
+                        playNext();
+                    }}, 2000);
+                }};
+            }} else {{
+                // 遇到沒有語音的(如※提示)，直接跳下一個
+                currentIndex++;
+                playNext();
+            }}
+        }}
+    </script>
+</body>
+</html>
+"""
+
+# 渲染自訂 HTML 元件 (設定足夠的高度以避免雙重捲軸)
+components.html(custom_html, height=1000, scrolling=True)
