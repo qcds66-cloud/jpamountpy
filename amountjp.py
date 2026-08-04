@@ -60,18 +60,18 @@ st.markdown(f"""
     
     /* 🔥 將下拉選單本身的選取框與文字放大約 80% (預設為 1rem，改為 1.8rem) */
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {{
-        font-size: 1.8rem !important;
+        font-size: 2.8rem !important;
     }}
     div[data-testid="stSelectbox"] div[data-baseweb="select"] span {{
-        font-size: 1.8rem !important;
+        font-size: 2.8rem !important;
     }}
     div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {{
-        width: 1.8rem !important;
-        height: 1.8rem !important;
+        width: 2.8rem !important;
+        height: 2.8rem !important;
     }}
     /* 🔥 同步放大展開後的選單清單文字 (加大80%) */
     ul[role="listbox"] li {{
-        font-size: 1.8rem !important;
+        font-size: 2.8rem !important;
     }}
     
     /* 🔥 縮小 Streamlit 預設的區塊間距 */
