@@ -22,7 +22,7 @@ STYLE_CONFIG = {
     
     # 列表文字設定
     "list_font_size": "20px",       # 🌟 單字列表的字體大小
-    "list_line_height": "1.2",      # 🌟 單字列表的行距 (原為2.0，依需求縮小30%改為1.4)
+    "list_line_height": "1.2",      # 🌟 單字列表的行距
     
     # 特殊文字顏色
     "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
@@ -43,6 +43,15 @@ st.markdown(f"""
         color: {STYLE_CONFIG["text_color"]};
         font-weight: bold;
         font-size: 1.5rem;
+    }}
+    
+    /* 🔥 縮小 Streamlit 預設的區塊間距 */
+    div[data-testid="stVerticalBlock"] {{
+        gap: 0rem !important; 
+    }}
+    /* 🔥 將下拉選單底部的空間進一步壓縮 */
+    div[data-testid="stSelectbox"] {{
+        margin-bottom: -10px !important;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -88,9 +97,8 @@ def get_audio_base64(text):
 # --- UI 介面設計 ---
 st.title("量詞學習/Sa i")
 
-# 選擇類別
+# 選擇類別 (🔥 已移除原有的 st.divider()，避免佔用版面)
 selected_category = st.selectbox("選 擇 類 別：", list(DATA.keys()))
-st.divider()
 
 # 動態產生該類別的 HTML 與 JavaScript 資料
 js_items = []
@@ -116,7 +124,6 @@ with st.spinner("載入語音中... (產生後立即可播放)"):
             js_items.append({"id": item_id, "hasAudio": True, "audio": audio_b64})
 
 # 組合 HTML 原始碼 (結合 CSS 與 JS 控制器)
-# 這裡將清單及播放邏輯封裝至前端，以達成精準的畫面顏色同步及 2 秒延遲。
 custom_html = f"""
 <!DOCTYPE html>
 <html>
@@ -127,6 +134,12 @@ custom_html = f"""
             background-color: {STYLE_CONFIG['bg_color']};
             margin: 0; padding: 0;
             font-family: sans-serif;
+        }}
+        /* 自訂的細版分隔線 */
+        .custom-divider {{
+            border: 0;
+            border-top: 1px solid #C9C9C9;
+            margin: 2px 0 10px 0; /* 極小的間距 */
         }}
         /* 播放按鈕設計 */
         .play-btn {{
@@ -169,6 +182,8 @@ custom_html = f"""
     </style>
 </head>
 <body>
+    <!-- 緊湊的分隔線 -->
+    <hr class="custom-divider">
     <button id="playBtn" class="play-btn" onclick="togglePlay()">▶️ 朗讀 {selected_category}</button>
     <div id="list-container">
         {"".join(html_list)}
