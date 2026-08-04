@@ -21,8 +21,8 @@ STYLE_CONFIG = {
     "text_color": "#4A4A4A",        # 主要文字顏色 (深灰)
     
     # 列表文字設定
-    "list_font_size": "22px",       # 🌟 單字列表的字體大小
-    "list_line_height": "1.4",      # 🌟 單字列表的行距 (原為2.0，依需求縮小30%改為1.4)
+    "list_font_size": "20px",       # 🌟 單字列表的字體大小
+    "list_line_height": "1.2",      # 🌟 單字列表的行距 (原為2.0，依需求縮小30%改為1.4)
     
     # 特殊文字顏色
     "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
@@ -42,7 +42,7 @@ st.markdown(f"""
     div[data-testid="stSelectbox"] label {{
         color: {STYLE_CONFIG["text_color"]};
         font-weight: bold;
-        font-size: 1.4rem;
+        font-size: 1.5rem;
     }}
     </style>
 """, unsafe_allow_html=True)
@@ -86,7 +86,7 @@ def get_audio_base64(text):
     return f"data:audio/mp3;base64,{b64}"
 
 # --- UI 介面設計 ---
-st.title("🇯🇵 日語量詞學習")
+st.title("日語量詞學習")
 
 # 選擇類別
 selected_category = st.selectbox("請選擇類別：", list(DATA.keys()))
@@ -132,7 +132,7 @@ custom_html = f"""
         .play-btn {{
             background-color: #A3B1C6;
             color: #333;
-            font-size: 1.2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             border: none;
             border-radius: 8px;
