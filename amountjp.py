@@ -7,7 +7,7 @@ import json
 
 # --- 頁面設定 (針對手機優化) ---
 st.set_page_config(
-    page_title="日語量詞學習 設計:Sa i",
+    page_title="量詞學習 設計:Sa i",
     page_icon="🇯🇵",
     layout="centered",
     initial_sidebar_state="collapsed"
