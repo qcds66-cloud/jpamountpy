@@ -22,7 +22,7 @@ STYLE_CONFIG = {
     
     # 列表文字設定
     "list_font_size": "20px",       # 🌟 單字列表的字體大小
-    "list_line_height": "0.9",      # 🌟 單字列表的行距
+    "list_line_height": "1.2",      # 🌟 單字列表的行距
     
     # 特殊文字顏色
     "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
@@ -36,14 +36,14 @@ st.markdown(f"""
     <style>
     /* 🔥 移除 Streamlit 預設的頂部大留白，讓畫面元素貼近最上方 */
     .block-container {{
-        padding-top: 2rem !important;
+        padding-top: 1rem !important;
     }}
     
     /* 🔥 針對 st.title() 產生的標題(h1)，將字體縮小50% (原約 2.5rem 改為 1.25rem) */
     h1 {{
-        font-size: 1.5rem !important;
-        padding-top: 5 !important;
-        margin-bottom: 5 !important;
+        font-size: 1.25rem !important;
+        padding-top: 0 !important;
+        margin-bottom: 0 !important;
     }}
 
     /* 整體背景與字體顏色 */
@@ -60,23 +60,23 @@ st.markdown(f"""
     
     /* 🔥 將下拉選單本身的選取框與文字放大約 80% (預設為 1rem，改為 1.8rem) */
     div[data-testid="stSelectbox"] div[data-baseweb="select"] {{
-        font-size: 2.8rem !important;
+        font-size: 1.8rem !important;
     }}
     div[data-testid="stSelectbox"] div[data-baseweb="select"] span {{
-        font-size: 2.8rem !important;
+        font-size: 1.8rem !important;
     }}
     div[data-testid="stSelectbox"] div[data-baseweb="select"] svg {{
-        width: 2.8rem !important;
-        height: 2.8rem !important;
+        width: 1.8rem !important;
+        height: 1.8rem !important;
     }}
     /* 🔥 同步放大展開後的選單清單文字 (加大80%) */
     ul[role="listbox"] li {{
-        font-size: 2.8rem !important;
+        font-size: 1.8rem !important;
     }}
     
     /* 🔥 縮小 Streamlit 預設的區塊間距 */
     div[data-testid="stVerticalBlock"] {{
-        gap: 1rem !important; 
+        gap: 0rem !important; 
     }}
     /* 🔥 將下拉選單底部的空間進一步壓縮 */
     div[data-testid="stSelectbox"] {{
@@ -87,8 +87,14 @@ st.markdown(f"""
 # ==========================================
 
 
-# --- 資料設定 (完整保留) ---
+# --- 資料設定 (增加數字 1-10、100-900、1000-9000、1萬-9萬) ---
 DATA = {
+    "數字 (1-10)": ["1 (いち)", "2 (に)", "3 (さん)", "4 (よん) *注意", "5 (ご)", "6 (ろく)", "7 (なな) *注意", "8 (はち)", "9 (きゅう) *注意", "10 (じゅう)"],
+    "數字 (100-900)": ["100 (ひゃく)", "200 (にひゃく)", "300 (さんびゃく) *注意", "400 (よんひゃく)", "500 (ごひゃく)", "600 (ろっぴゃく) *注意", "700 (ななひゃく)", "800 (はっぴゃく) *注意", "900 (きゅうひゃく)"],
+    "數字 (1000-9000)": ["1000 (せん)", "2000 (にせん)", "3000 (さんぜん) *注意", "4000 (よんせん)", "5000 (ごせん)", "6000 (ろくせん)", "7000 (ななせん)", "8000 (はっせん) *注意", "9000 (きゅうせん)"],
+    "數字 (1萬-9萬)": ["1万 (いちまん)", "2万 (にまん)", "3万 (さんまん)", "4万 (よんまん)", "5万 (ごまん)", "6万 (ろくまん)", "7万 (ななまん)", "8万 (はちまん)", "9万 (きゅうまん)"],
+    
+    # 以下為原本保留的資料
     "日付 (日期)": ["1日 (ついたち)", "2日 (ふつか)", "3日 (みっか)", "4日 (よっか)", "5日 (いつか)", "6日 (むいか)", "7日 (なのか)", "8日 (ようか)", "9日 (ここのか)", "10日 (とおか)", "11日 (じゅういちにち)", "12日 (じゅうににち)", "14日 (じゅうよっか)", "20日 (はつか)", "24日 (にじゅうよっか)"],
     "月 (月份)": ["1月 (いちがつ)", "2月 (にがつ)", "3月 (さんがつ)", "4月 (しがつ) *注意", "5月 (ごがつ)", "6月 (ろくがつ)", "7月 (しちがつ)", "8月 (はちがつ)", "9月 (くがつ) *注意", "10月 (じゅうがつ)", "11月 (じゅういちがつ)", "12月 (じゅうにがつ)"],
     "曜日 (星期)": ["月曜日 (げつようび)", "火曜日 (かようび)", "水曜日 (すいようび)", "木曜日 (もくようび)", "金曜日 (きんようび)", "土曜日 (どようび)", "日曜日 (にちようび)"],
