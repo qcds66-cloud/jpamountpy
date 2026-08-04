@@ -21,7 +21,7 @@ STYLE_CONFIG = {
     "text_color": "#4A4A4A",        # 主要文字顏色 (深灰)
     
     # 列表文字設定
-    "list_font_size": "20px",       # 🌟 單字列表的字體大小
+    "list_font_size": "24px",       # 🌟 單字列表的字體大小
     "list_line_height": "1.0",      # 🌟 單字列表的行距
     
     # 特殊文字顏色
