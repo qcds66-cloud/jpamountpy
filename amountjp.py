@@ -10,31 +10,61 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# --- 莫蘭迪色系 CSS 注入 (優化網頁視覺) ---
-st.markdown("""
+# ==========================================
+# --- 🎨 字體、行距與顏色設定區塊 (集中管理) ---
+# ==========================================
+STYLE_CONFIG = {
+    "bg_color": "#E0E0D8",          # 整體背景色 (莫蘭迪灰)
+    "text_color": "#4A4A4A",        # 主要文字顏色 (深灰)
+    
+    # 列表文字設定
+    "list_font_size": "22px",       # 🌟 單字列表的字體大小 (建議 18px ~ 24px)
+    "list_line_height": "2.2",      # 🌟 單字列表的行距 (建議 1.5 ~ 2.5)
+    
+    # 特殊文字顏色
+    "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
+    "warn_color": "#C07B7B"         # 警告文字 (*注意) 的顏色
+}
+
+# 注入 CSS 樣式
+st.markdown(f"""
     <style>
-    .stApp {
-        background-color: #E0E0D8;
-    }
-    div[data-testid="stSelectbox"] label {
-        color: #4A4A4A;
+    /* 整體背景與字體顏色 */
+    .stApp {{
+        background-color: {STYLE_CONFIG["bg_color"]};
+    }}
+    
+    /* 下拉選單標題設定 */
+    div[data-testid="stSelectbox"] label {{
+        color: {STYLE_CONFIG["text_color"]};
         font-weight: bold;
-        font-size: 1.1rem;
-    }
-    div[data-testid="stMarkdownContainer"] p {
-        color: #4A4A4A;
-    }
-    /* 備註提示框樣式 */
-    .stAlert {
-        background-color: #F5F5F0;
-        color: #4A4A4A;
-        border: none;
-    }
+        font-size: 1.2rem;
+    }}
+    
+    /* 自訂列表項目的 CSS 類別 */
+    .list-item {{
+        font-size: {STYLE_CONFIG["list_font_size"]};
+        line-height: {STYLE_CONFIG["list_line_height"]};
+        color: {STYLE_CONFIG["text_color"]};
+        font-weight: bold;
+        padding: 5px 10px;
+        border-bottom: 1px dashed #C9C9C9; /* 加上淡淡的分隔線增加易讀性 */
+    }}
+    
+    /* 提示與注意的文字樣式 */
+    .item-note {{
+        color: {STYLE_CONFIG["note_color"]};
+        font-size: 0.9em; /* 比主字體稍微小一點 */
+    }}
+    .item-warn {{
+        color: {STYLE_CONFIG["warn_color"]};
+    }}
     </style>
 """, unsafe_allow_html=True)
+# ==========================================
 
 
-# --- 資料設定 (完整保留原本的資料) ---
+# --- 資料設定 (完整保留) ---
 DATA = {
     "日付 (日期)": ["1日 (ついたち)", "2日 (ふつか)", "3日 (みっか)", "4日 (よっか)", "5日 (いつか)", "6日 (むいか)", "7日 (なのか)", "8日 (ようか)", "9日 (ここのか)", "10日 (とおか)", "11日 (じゅういちにち)", "12日 (じゅうににち)", "14日 (じゅうよっか)", "20日 (はつか)", "24日 (にじゅうよっか)"],
     "月 (月份)": ["1月 (いちがつ)", "2月 (にがつ)", "3月 (さんがつ)", "4月 (しがつ) *注意", "5月 (ごがつ)", "6月 (ろくがつ)", "7月 (しちがつ)", "8月 (hachigatsu)", "9月 (くがつ) *注意", "10月 (じゅうがつ)", "11月 (じゅういちがつ)", "12月 (じゅうにがつ)"],
@@ -48,7 +78,7 @@ DATA = {
     "動物 (匹 - 貓狗魚)": ["1匹 (いっぴき)", "2匹 (にひき)", "3匹 (さんびき)", "4匹 (よんひき)", "5匹 (ごひき)", "6匹 (ろっぴき)", "7匹 (ななひき)", "8匹 (はっぴき)", "9匹 (きゅうひき)", "10匹 (じゅっぴき)"],
     "大型動物 (頭 - 牛馬)": ["1頭 (いっとう)", "2頭 (にとう)", "3頭 (さんとう)", "4頭 (よんとう)", "5頭 (ごとう)", "6頭 (ろっとう)", "7頭 (ななとう)", "8頭 (はっとう)", "9頭 (きゅうとう)", "10頭 (じゅっとう)"],
     "細長物 (本 - 瓶/筆/樹)": ["※瓶子、雨傘、筆等細長物", "1本 (いっぽん)", "2本 (にほん)", "3本 (さんぼん)", "4本 (よんほん)", "5本 (ごほん)", "6本 (ろっぽん)", "7本 (ななほん)", "8本 (はっぽん)", "9本 (きゅうほん)", "10本 (じゅっぽん)"],
-    "扁平物 (枚 - 紙/吐司)": ["※紙張、衣服、切片吐司等", "1枚 (いちまい)", "2枚 (にまい)", "3枚 (さんまい)", "4枚 (よんまい)", "5枚 (ごまい)", "6枚 (ろくまい)", "7枚 (ななまい)", "8枚 (はちまい)", "9枚 (きゅうまい)", "10枚 (じゅまい)"],
+    "扁平物 (枚 - 紙/吐司)": ["※紙張、衣服、切片吐司等", "1枚 (いちまい)", "2枚 (にまい)", "3枚 (さんまい)", "4枚 (よんまい)", "5枚 (ごまい)", "6枚 (ろくまい)", "7枚 (ななまい)", "8枚 (はちまい)", "9枚 (きゅうまい)", "10枚 (じゅうまい)"],
     "書籍/雜誌 (冊)": ["1冊 (いっさつ)", "2冊 (にさつ)", "3冊 (さんさつ)", "4冊 (よんさつ)", "5冊 (ごさつ)", "6冊 (ろっさつ)", "7冊 (ななさつ)", "8冊 (はっさつ)", "9冊 (きゅうさつ)", "10冊 (じゅっさつ)"],
     "樓層 (階)": ["1階 (いっかい)", "2階 (にかい)", "3階 (さんがい) *注意", "4階 (よんかい)", "5階 (ごかい)", "6階 (ろっかい)", "7階 (ななかい)", "8階 (はっかい)", "9階 (きゅうかい)", "10階 (じゅっかい)"]
 }
@@ -62,7 +92,7 @@ def get_readable_text(text):
 
 @st.cache_data
 def get_audio_bytes(text):
-    """生成 TTS 音訊並轉為位元組 (加入快取以提升手機載入速度)"""
+    """生成 TTS 音訊並轉為位元組"""
     tts = gTTS(text=text, lang='ja')
     fp = io.BytesIO()
     tts.write_to_fp(fp)
@@ -72,55 +102,39 @@ def get_audio_bytes(text):
 # --- UI 介面設計 ---
 st.title("🇯🇵 日語量詞學習")
 
-# 手機友善的下拉式選單
+# 選擇類別
 selected_category = st.selectbox("請選擇學習類別：", list(DATA.keys()))
-
 st.divider()
 
-# 音訊播放區塊 (固定在頂部，避免點擊播放時畫面跳動)
+# 音訊播放區塊 (固定在頂部)
 audio_placeholder = st.empty()
 
 # 控制按鈕區 (連續朗讀)
-col1, col2 = st.columns([1, 1])
-with col1:
-    play_all = st.button("▶️ 連續朗讀", use_container_width=True)
-with col2:
-    st.write("*(欲停止可直接在播放器按暫停)*")
+play_all = st.button("▶️ 播放此類別連續朗讀", use_container_width=True)
 
 if play_all:
     # 組合該類別的所有單字，使用句號分隔以產生自然的停頓
     items_to_read = [get_readable_text(item) for item in DATA[selected_category] if not item.startswith("※")]
     combined_text = "。 ".join(items_to_read)
     
-    with st.spinner("產生連續語音中..."):
+    with st.spinner("產生連續語音中... (產生後將自動播放)"):
         audio_bytes = get_audio_bytes(combined_text)
-        # 在頂部顯示播放器並自動播放
         audio_placeholder.audio(audio_bytes, format='audio/mp3', autoplay=True)
 
-# 列表展示區
+# 類別標題
 st.subheader(selected_category)
 
-# 將清單顯示為手機適合的卡片式版面
-for idx, item in enumerate(DATA[selected_category]):
+# 列表展示區 (使用 HTML 渲染以套用集中的樣式設定)
+for item in DATA[selected_category]:
     if item.startswith("※"):
         # 提示文字
-        st.info(item)
+        display_html = f"<div class='list-item item-note'>{item}</div>"
+    elif "*注意" in item:
+        # 注意文字 (將 *注意 標上特殊顏色)
+        clean_text = item.replace("*注意", "")
+        display_html = f"<div class='list-item'>{clean_text} <span class='item-warn'>(*注意)</span></div>"
     else:
-        # 使用欄位來並排「文字」與「獨立播放按鈕」
-        col_text, col_btn = st.columns([4, 1])
+        # 一般文字
+        display_html = f"<div class='list-item'>{item}</div>"
         
-        with col_text:
-            # 判斷是否為有 *注意 的特殊變化，用紅色標記
-            if "*注意" in item:
-                display_text = item.replace("*注意", "<span style='color:#D5C6C6; font-weight:bold;'>(注意)</span>")
-                st.markdown(f"**{display_text}**", unsafe_allow_html=True)
-            else:
-                st.markdown(f"**{item}**")
-                
-        with col_btn:
-            # 每列的獨立播放按鈕
-            if st.button("🔊", key=f"btn_{selected_category}_{idx}", use_container_width=True):
-                with st.spinner(""):
-                    audio_bytes = get_audio_bytes(get_readable_text(item))
-                    # 將產生的音檔放到頂部的播放器並自動播放
-                    audio_placeholder.audio(audio_bytes, format='audio/mp3', autoplay=True)
+    st.markdown(display_html, unsafe_allow_html=True)
