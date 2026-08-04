@@ -54,7 +54,7 @@ st.markdown(f"""
     div[data-testid="stSelectbox"] label {{
         color: {STYLE_CONFIG["text_color"]};
         font-weight: bold;
-        font-size: 1.9rem;
+        font-size: 2.2rem;
     }}
     
     /* 🔥 縮小 Streamlit 預設的區塊間距 */
