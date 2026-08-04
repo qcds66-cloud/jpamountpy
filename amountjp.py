@@ -34,6 +34,18 @@ STYLE_CONFIG = {
 # 注入 Streamlit 原生介面 CSS 樣式
 st.markdown(f"""
     <style>
+    /* 🔥 移除 Streamlit 預設的頂部大留白，讓畫面元素貼近最上方 */
+    .block-container {{
+        padding-top: 1rem !important;
+    }}
+    
+    /* 🔥 針對 st.title() 產生的標題(h1)，將字體縮小50% (原約 2.5rem 改為 1.25rem) */
+    h1 {{
+        font-size: 1.25rem !important;
+        padding-top: 0 !important;
+        margin-bottom: 0 !important;
+    }}
+
     /* 整體背景與字體顏色 */
     .stApp {{
         background-color: {STYLE_CONFIG["bg_color"]};
@@ -97,7 +109,7 @@ def get_audio_base64(text):
 # --- UI 介面設計 ---
 st.title("量詞學習/Sa i")
 
-# 選擇類別 (🔥 已移除原有的 st.divider()，避免佔用版面)
+# 選擇類別
 selected_category = st.selectbox("選 擇 類 別：", list(DATA.keys()))
 
 # 動態產生該類別的 HTML 與 JavaScript 資料
