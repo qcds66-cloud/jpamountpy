@@ -22,7 +22,7 @@ STYLE_CONFIG = {
     
     # 列表文字設定
     "list_font_size": "20px",       # 🌟 單字列表的字體大小
-    "list_line_height": "1.2",      # 🌟 單字列表的行距
+    "list_line_height": "1.1",      # 🌟 單字列表的行距
     
     # 特殊文字顏色
     "note_color": "#6B8E23",        # 提示文字 (※開頭) 的顏色
