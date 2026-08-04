@@ -21,7 +21,7 @@ STYLE_CONFIG = {
     "text_color": "#4A4A4A",        # 主要文字顏色 (深灰)
     
     # 列表文字設定
-    "list_font_size": "22px",       # 🌟 單字列表的字體大小
+    "list_font_size": "20px",       # 🌟 單字列表的字體大小
     "list_line_height": "1.0",      # 🌟 單字列表的行距
     
     # 特殊文字顏色
@@ -42,7 +42,7 @@ st.markdown(f"""
     /* 🔥 針對 st.title() 產生的標題(h1)，將字體縮小50% (原約 2.5rem 改為 1.25rem) */
     h1 {{
         font-size: 1.25rem !important;
-        padding-top: 1 !important;
+        padding-top: 0 !important;
         margin-bottom: 1 !important;
     }}
 
@@ -55,7 +55,7 @@ st.markdown(f"""
     div[data-testid="stSelectbox"] label {{
         color: {STYLE_CONFIG["text_color"]};
         font-weight: bold;
-        font-size: 1.5rem;
+        font-size: 1.8rem;
     }}
     
     /* 🔥 將下拉選單本身的選取框與文字放大約 80% (預設為 1rem，改為 1.8rem) */
@@ -76,7 +76,7 @@ st.markdown(f"""
     
     /* 🔥 縮小 Streamlit 預設的區塊間距 */
     div[data-testid="stVerticalBlock"] {{
-        gap: 0.5rem !important; 
+        gap: 0rem !important; 
     }}
     /* 🔥 將下拉選單底部的空間進一步壓縮 */
     div[data-testid="stSelectbox"] {{
