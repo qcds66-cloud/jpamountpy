@@ -42,8 +42,8 @@ st.markdown(f"""
     /* 🔥 針對 st.title() 產生的標題(h1)，將字體縮小50% (原約 2.5rem 改為 1.25rem) */
     h1 {{
         font-size: 1.25rem !important;
-        padding-top: 0 !important;
-        margin-bottom: 0 !important;
+        padding-top: 5 !important;
+        margin-bottom: 5 !important;
     }}
 
     /* 整體背景與字體顏色 */
