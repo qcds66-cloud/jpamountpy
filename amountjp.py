@@ -7,7 +7,7 @@ import json
 
 # --- 頁面設定 (針對手機優化) ---
 st.set_page_config(
-    page_title="量詞學習 設計:Sa i",
+    page_title="量詞學習",
     page_icon="🇯🇵",
     layout="centered",
     initial_sidebar_state="collapsed"
@@ -86,10 +86,10 @@ def get_audio_base64(text):
     return f"data:audio/mp3;base64,{b64}"
 
 # --- UI 介面設計 ---
-st.title("日語量詞學習")
+st.title("量詞學習 設計:Sa i")
 
 # 選擇類別
-selected_category = st.selectbox("請選擇類別：", list(DATA.keys()))
+selected_category = st.selectbox("選 擇 類 別：", list(DATA.keys()))
 st.divider()
 
 # 動態產生該類別的 HTML 與 JavaScript 資料
