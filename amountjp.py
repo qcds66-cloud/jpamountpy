@@ -76,7 +76,7 @@ st.markdown(f"""
     
     /* 🔥 縮小 Streamlit 預設的區塊間距 */
     div[data-testid="stVerticalBlock"] {{
-        gap: 0rem !important; 
+        gap: 3rem !important; 
     }}
     /* 🔥 將下拉選單底部的空間進一步壓縮 */
     div[data-testid="stSelectbox"] {{
